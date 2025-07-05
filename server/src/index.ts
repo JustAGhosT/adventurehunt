@@ -7,12 +7,12 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 
 import { PrismaClient } from '@prisma/client';
-import { errorHandler } from './middleware/errorHandler';
-import { authMiddleware } from './middleware/auth';
-import { huntRoutes } from './routes/hunts';
-import { userRoutes } from './routes/users';
-import { ratingRoutes } from './routes/ratings';
-import { AIOrchestrator } from './services/AIOrchestrator';
+import { errorHandler } from './middleware/errorHandler.js';
+import { authMiddleware } from './middleware/auth.js';
+import { huntRoutes } from './routes/hunts.js';
+import { userRoutes } from './routes/users.js';
+import { ratingRoutes } from './routes/ratings.js';
+import { AIOrchestrator } from './services/AIOrchestrator.js';
 
 dotenv.config();
 
@@ -40,7 +40,10 @@ const limiter = rateLimit({
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true
+}));
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -83,6 +86,7 @@ const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
+  console.log(`🌐 Frontend URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
 });
 
 // Graceful shutdown
