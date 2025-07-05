@@ -5,7 +5,7 @@
   "description": "Backend API for the Scavenger Hunt application",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "npx tsx watch src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
