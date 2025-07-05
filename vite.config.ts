@@ -6,11 +6,11 @@ export default defineConfig({
   root: '.',
   plugins: [react()],
   server: {
-    port: 5173,
+    port: 5174, // Changed to avoid port conflict
     host: true
   },
   preview: {
-    port: 5173,
+    port: 5174,
     host: true
   },
   optimizeDeps: {
