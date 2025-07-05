@@ -19,13 +19,14 @@ export const errorHandler = (
     stack: err.stack,
     url: req.url,
     method: req.method,
+    timestamp: new Date().toISOString()
   });
 
   res.status(statusCode).json({
     success: false,
     error: {
       message,
-      ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
-    },
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    }
   });
 };

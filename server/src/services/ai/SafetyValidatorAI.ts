@@ -1,15 +1,21 @@
+import { VisualData } from './VisualGeneratorAI.js';
+
+export interface SafetyData extends VisualData {
+  safetyNotes: string[];
+  contentRating: 'safe' | 'caution' | 'unsafe';
+}
+
 export class SafetyValidatorAI {
-  async validateSafety(content: any) {
-    try {
-      // Mock safety validation
-      return {
-        isValid: true,
-        concerns: [],
-        recommendations: []
-      };
-    } catch (error) {
-      console.error('Error validating safety:', error);
-      throw error;
-    }
+  async validateContent(visualData: VisualData): Promise<SafetyData> {
+    // Placeholder implementation
+    return {
+      ...visualData,
+      safetyNotes: [
+        'Always stay with an adult',
+        'Be aware of your surroundings',
+        'Have fun and be safe!'
+      ],
+      contentRating: 'safe'
+    };
   }
 }

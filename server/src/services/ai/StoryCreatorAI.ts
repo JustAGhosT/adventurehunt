@@ -1,15 +1,25 @@
+import { HuntRequest } from '../AIOrchestrator.js';
+
+export interface StoryData {
+  theme: string;
+  narrative: string;
+  characters: string[];
+  plotPoints: string[];
+}
+
 export class StoryCreatorAI {
-  async createStory(theme: string, ageGroup: string) {
-    try {
-      // Mock story creation
-      return {
-        title: `Adventure in ${theme}`,
-        description: `An exciting ${theme} adventure for ${ageGroup}`,
-        narrative: 'Once upon a time...'
-      };
-    } catch (error) {
-      console.error('Error creating story:', error);
-      throw error;
-    }
+  async generateStory(request: HuntRequest): Promise<StoryData> {
+    // Placeholder implementation
+    return {
+      theme: request.theme,
+      narrative: `An exciting ${request.theme} adventure awaits!`,
+      characters: ['Adventure Guide', 'Helpful Friend'],
+      plotPoints: [
+        'Start the adventure',
+        'Discover the first clue',
+        'Solve the mystery',
+        'Complete the quest'
+      ]
+    };
   }
 }
