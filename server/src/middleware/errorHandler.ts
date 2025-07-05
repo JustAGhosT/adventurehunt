@@ -2,39 +2,30 @@ import { Request, Response, NextFunction } from 'express';
 
 export interface AppError extends Error {
   statusCode?: number;
-  code?: string;
-  details?: any;
+  isOperational?: boolean;
 }
 
 export const errorHandler = (
-  error: AppError,
+  err: AppError,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const statusCode = error.statusCode || 500;
-  const errorCode = error.code || 'INTERNAL_SERVER_ERROR';
-  
-  console.error(`[ERROR] ${errorCode}:`, error.message);
-  console.error(error.stack);
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+
+  console.error('Error:', {
+    message: err.message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+  });
 
   res.status(statusCode).json({
-    code: errorCode,
-    message: error.message || 'Something went wrong!',
-    details: error.details || null,
-    timestamp: new Date().toISOString()
+    success: false,
+    error: {
+      message,
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    },
   });
-};
-
-export const createError = (
-  message: string, 
-  statusCode: number = 500, 
-  code: string = 'INTERNAL_SERVER_ERROR',
-  details?: any
-): AppError => {
-  const error = new Error(message) as AppError;
-  error.statusCode = statusCode;
-  error.code = code;
-  error.details = details;
-  return error;
 };

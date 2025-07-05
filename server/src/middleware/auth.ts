@@ -1,32 +1,43 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { createError } from './errorHandler';
+import { PrismaClient } from '@prisma/client';
 
-export interface AuthenticatedRequest extends Request {
+const prisma = new PrismaClient();
+
+export interface AuthRequest extends Request {
   user?: {
     id: string;
-    name: string;
-    age_group: string;
+    email: string;
+    role: string;
   };
 }
 
-export const authMiddleware = (
-  req: AuthenticatedRequest,
+export const authMiddleware = async (
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
-      throw createError('Access denied. No token provided.', 401, 'NO_TOKEN');
+      return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret') as any;
-    req.user = decoded;
     
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { id: true, email: true, role: true }
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid token.' });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
-    next(createError('Invalid token.', 401, 'INVALID_TOKEN'));
+    res.status(401).json({ message: 'Invalid token.' });
   }
 };
