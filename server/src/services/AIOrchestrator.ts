@@ -1,8 +1,8 @@
-import { StoryCreatorAI } from './ai/StoryCreatorAI';
-import { GeographicExpertAI } from './ai/GeographicExpertAI';
-import { VisualGeneratorAI } from './ai/VisualGeneratorAI';
-import { SafetyValidatorAI } from './ai/SafetyValidatorAI';
-import { CreativeBoosterAI } from './ai/CreativeBoosterAI';
+import { StoryCreatorAI } from './ai/StoryCreatorAI.js';
+import { GeographicExpertAI } from './ai/GeographicExpertAI.js';
+import { VisualGeneratorAI } from './ai/VisualGeneratorAI.js';
+import { SafetyValidatorAI } from './ai/SafetyValidatorAI.js';
+import { CreativeBoosterAI } from './ai/CreativeBoosterAI.js';
 
 export class AIOrchestrator {
   private storyCreator: StoryCreatorAI;

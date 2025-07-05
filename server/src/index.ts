@@ -8,7 +8,6 @@ import dotenv from 'dotenv';
 
 import { PrismaClient } from '@prisma/client';
 import { errorHandler } from './middleware/errorHandler.js';
-import { authMiddleware } from './middleware/auth.js';
 import { huntRoutes } from './routes/hunts.js';
 import { userRoutes } from './routes/users.js';
 import { ratingRoutes } from './routes/ratings.js';
@@ -20,7 +19,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5174",
     methods: ["GET", "POST"]
   }
 });
@@ -41,7 +40,7 @@ const limiter = rateLimit({
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  origin: process.env.CLIENT_URL || "http://localhost:5174",
   credentials: true
 }));
 app.use(limiter);
@@ -86,7 +85,7 @@ const PORT = process.env.PORT || 3001;
 httpServer.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
-  console.log(`🌐 Frontend URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
+  console.log(`🌐 Frontend URL: ${process.env.CLIENT_URL || 'http://localhost:5174'}`);
 });
 
 // Graceful shutdown

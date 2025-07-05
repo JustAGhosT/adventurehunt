@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
@@ -14,7 +13,7 @@ router.get('/hunt/:huntId', async (req, res) => {
 });
 
 // Create a rating
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     res.json({ message: 'Rating created successfully' });
   } catch (error) {

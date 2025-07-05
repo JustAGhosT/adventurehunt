@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
@@ -13,7 +12,7 @@ router.get('/', async (req, res) => {
 });
 
 // Create a new hunt
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     res.json({ message: 'Hunt created successfully' });
   } catch (error) {
