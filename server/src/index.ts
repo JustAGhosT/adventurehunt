@@ -27,6 +27,11 @@ const io = new Server(httpServer, {
 // Database connection
 export const prisma = new PrismaClient();
 
+// Test database connection
+prisma.$connect()
+  .then(() => console.log('📊 Database connected successfully'))
+  .catch((error) => console.error('❌ Database connection failed:', error));
+
 // Initialize AI Orchestrator
 export const aiOrchestrator = new AIOrchestrator();
 

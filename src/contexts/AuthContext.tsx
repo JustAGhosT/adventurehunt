@@ -106,7 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       });
       
-      const { user, token } = response.data;
+      const { user, token } = response.data.data;
       
       // Save to localStorage
       localStorage.setItem('auth_token', token);
@@ -114,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       dispatch({ type: 'LOGIN_SUCCESS', payload: { user, token } });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Failed to create user';
+      const errorMessage = error.response?.data?.error?.message || 'Failed to create user';
       dispatch({ type: 'LOGIN_FAILURE', payload: errorMessage });
       throw error;
     }

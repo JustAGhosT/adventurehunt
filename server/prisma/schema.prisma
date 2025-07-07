@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  name        String
+  age_group   String   // "6-8", "9-12"
+  preferences Json?    // User preferences for hunt types
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  hunts   Hunt[]
+  ratings Rating[]
+
+  @@map("users")
+}
+
+model Hunt {
+  id            String      @id @default(cuid())
+  title         String
+  theme         String      // "pirates", "nature", "city", etc.
+  difficulty    String      // "easy", "medium", "hard"
+  location_type String      // "indoor", "outdoor", "mixed"
+  status        HuntStatus  @default(GENERATING)
+  progress      Int         @default(0) // 0-100
+  duration      Int?        // Expected duration in minutes
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
+  user_id       String
+
+  user  User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  clues Clue[]
+  ratings Rating[]
+  candidate_variants CandidateVariant[]
+
+  @@map("hunts")
+}
+
+model Clue {
+  id            String   @id @default(cuid())
+  sequence      Int      // Order in the hunt
+  riddle_text   String
+  location_hint String
+  safety_notes  String?
+  audio_url     String?  // Optional audio clue
+  image_url     String?  // Optional visual clue
+  verification_method String @default("photo") // "photo", "text", "location"
+  created_at    DateTime @default(now())
+  hunt_id       String
+
+  hunt Hunt @relation(fields: [hunt_id], references: [id], onDelete: Cascade)
+
+  @@map("clues")
+}
+
+model CandidateVariant {
+  id               String   @id @default(cuid())
+  step_name        String   // "story", "geographic", "visual", "safety", "creative"
+  content          Json     // AI-generated content
+  ai_model_source  String   // Which AI model generated this
+  ranking_score    Float    @default(0.0)
+  created_at       DateTime @default(now())
+  hunt_id          String
+
+  hunt Hunt @relation(fields: [hunt_id], references: [id], onDelete: Cascade)
+
+  @@map("candidate_variants")
+}
+
+model Rating {
+  id                 String   @id @default(cuid())
+  engagement_score   Int      // 1-5 scale
+  difficulty_rating  Int      // 1-5 scale
+  feedback           String?
+  completed          Boolean  @default(false)
+  completion_time    Int?     // Time taken in minutes
+  created_at         DateTime @default(now())
+  hunt_id            String
+  user_id            String
+
+  hunt Hunt @relation(fields: [hunt_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("ratings")
+}
+
+enum HuntStatus {
+  GENERATING
+  READY
+  IN_PROGRESS
+  COMPLETED
+  ERROR
+}
